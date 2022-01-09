@@ -16,15 +16,50 @@
 		<script type="text/javascript" src="./js/vue.js"></script>
 		<script type="text/javascript">
 			// 全局注册组件
+			// Vue.component('button-com', {
+			// 	data: function () {
+			// 		return { counter: 0 };
+			// 	},
+			// 	template:
+			// 		'<button @click="handle">点击了<i>{{counter}}</i>次</button>',
+			// 	methods: {
+			// 		handle: function () {
+			// 			this.counter += 1;
+			// 		}
+			// 	}
+			// });
+
+			/**
+			 * @ 组件注册的注意事项
+			 * 1.组件的模板必须是单个根元素
+			 * 2.组件的模板可以使用模板字符串
+			 * 3.组件的data参数，参数值必须是一个函数（匿名函数使得每个组件的数据都存储在不同的函数中，以避免各组件数据相互污染）
+			 * 4.当以驼峰命名法，命名组件时，只能用在组件定义和模板字符串中,在普通标签中必须使用短横线连接的方式
+			 *
+			 *
+			 *
+			 */
+			Vue.component('HelloWorld', {
+				data: function () {
+					return { msg: 'Hello World' };
+				},
+				template: '<div><span>{{msg}}</span></div>'
+			});
 			Vue.component('button-com', {
+				// data参数值必须是函数
 				data: function () {
 					return { counter: 0 };
 				},
-				template:
-					'<button @click="handle">点击了<i>{{counter}}</i>次</button>',
+				// 模板必须是单个根元素，即模板所在的代码顶级层盒子必须包裹所有子盒子
+				// 模板中可以使用模板字符串
+				template: `<div>
+          <span>按钮</span>
+          <button @click="handle">点击了<b>{{counter}}<b>次</button>
+            <HelloWorld></HelloWorld>
+          </div>`,
 				methods: {
 					handle: function () {
-						this.counter += 1;
+						this.counter += 0;
 					}
 				}
 			});
