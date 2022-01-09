@@ -12,6 +12,11 @@
 			<button-com></button-com>
 			<button-com></button-com>
 			<button-com></button-com>
+			<hr />
+			<h3>私有组件</h3>
+			<hello-tom></hello-tom>
+			<hello-bob></hello-bob>
+			<hello-tony></hello-tony>
 		</div>
 		<script type="text/javascript" src="./js/vue.js"></script>
 		<script type="text/javascript">
@@ -53,20 +58,44 @@
 				// 模板必须是单个根元素，即模板所在的代码顶级层盒子必须包裹所有子盒子
 				// 模板中可以使用模板字符串
 				template: `<div>
-          <span>按钮</span>
-          <button @click="handle">点击了<b>{{counter}}<b>次</button>
-            <HelloWorld></HelloWorld>
-          </div>`,
+			       <span>按钮</span>
+			       <button @click="handle">点击了<b>{{counter}}<b>次</button>
+			         <HelloWorld></HelloWorld>
+			       </div>`,
 				methods: {
 					handle: function () {
 						this.counter += 0;
 					}
 				}
 			});
+			//  私有组件的定义
+			const HelloTom = {
+				data: function () {
+					return { msg: 'HelloTom' };
+				},
+				template: '<div><b>{{msg}}</b></div>'
+			};
+			const HelloBob = {
+				data: function () {
+					return { msg: 'HelloBob' };
+				},
+				template: '<div><i>{{msg}}</i></div>'
+			};
+			const HelloTony = {
+				data: function () {
+					return { msg: 'HelloTony' };
+				},
+				template: '<div><s>{{msg}}</s></div>'
+			};
 			const vm = new Vue({
 				// 控制区域
 				el: '#app',
-				data: {}
+				data: {},
+				components: {
+					'hello-tom': HelloTom,
+					'hello-bob': HelloBob,
+					'hello-tony': HelloTony
+				}
 			});
 		</script>
 	</body>
