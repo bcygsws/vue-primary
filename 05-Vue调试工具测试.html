@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>05-Vue调试工具测试</title>
+		<style type="text/css">
+			.root {
+				background-color: orange;
+			}
+			.second {
+				background-color: purple;
+			}
+			.third {
+				background-color: green;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 观察视图，分析margin-top塌陷问题 -->
+		<div id="app" class="root">
+			<div>{{root}}</div>
+			<second-com></second-com>
+			<second-com></second-com>
+		</div>
+		<script type="text/javascript" src="./js/vue.js"></script>
+		<script type="text/javascript">
+			// Vue调试工具的安装和基本使用
+			// 二级组件的注册
+			Vue.component('second-com', {
+				data: function () {
+					return { msg: '这是二级组件' };
+				},
+				template: `<div class="second">
+          <h3>{{msg}}</h3>
+          <third-com></third-com>
+          <third-com></third-com>
+          <third-com></third-com>
+          </div>`
+			});
+			// 三级组件的注册
+			Vue.component('third-com', {
+				data: function () {
+					return { msg: '这是三级组件' };
+				},
+				template: '<div class="third">{{msg}}</div>'
+			});
+			const vm = new Vue({
+				el: '#app',
+				data: { root: '顶层组件' }
+			});
+		</script>
+	</body>
+</html>
