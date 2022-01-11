@@ -11,6 +11,26 @@
 			}
 			.second {
 				background-color: purple;
+				/*margin-top塌陷解决的6种方法
+				a.给父元素添加边框，但会添加附加的边框
+				b.给父元素设置溢出隐藏
+				c.给父元素设置固定定位position：fixed;
+				d.给父元素设置浮动，不推荐，会出现未知错误
+				e.给父元素设置display:table;
+				f.使用伪元素方法,.clearfix::before{content:'';display:table;}
+				*/
+				/* border: 1px solid #fff; */
+				/* overflow: hidden; */
+				/* position: fixed; */
+				/* 浮动的方法不推荐 */
+
+				/* 不推荐使用表格布局的方法 */
+				/* display: table; */
+				/* 伪元素方法，给父元素增加一个clearfix类 */
+			}
+			.clearfix::before {
+				content: '';
+				display: table;
 			}
 			.third {
 				background-color: green;
@@ -32,7 +52,7 @@
 				data: function () {
 					return { msg: '这是二级组件' };
 				},
-				template: `<div class="second">
+				template: `<div class="second clearfix">
           <h3>{{msg}}</h3>
           <third-com></third-com>
           <third-com></third-com>
