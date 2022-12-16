@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>04-混入-选项合并</title>
+	</head>
+	<body>
+		<script type="text/javascript" src="./js/vue.js"></script>
+		<script type="text/javascript">
+			// 定义混入对象	
+			// let myMixin = {
+			// 	data: function() {
+			// 		return {
+			// 			message: 'hello',
+			// 			foo: 'abc'
+			// 		}
+			// 	}
+			// };
+			// // 定义组件
+			// new Vue({
+			// 	mixins: [myMixin],
+			// 	data: function() {
+			// 		return {
+			// 			message: 'goodbye',
+			// 			bar: 'van dijk'
+			// 		}
+			// 	},
+			// 	// 生命周期钩子created,组件渲染时数据完成初始化
+			// 	created: function() {
+			// 		console.log(this.$data);
+			// 	}
+			// });
+			/* 
+			Object
+			bar: "van dijk"
+			foo: "abc"
+			message: "goodbye"
+			__ob__: Observer {value: {…}, dep: Dep, vmCount: 1}
+			get bar: ƒ reactiveGetter()
+			set bar: ƒ reactiveSetter(newVal)
+			get foo: ƒ reactiveGetter()
+			set foo: ƒ reactiveSetter(newVal)
+			get message: ƒ reactiveGetter()
+			set message: ƒ reactiveSetter(newVal)
+			[[Prototype]]: Object
+			*/
+			// 打印结果分析合并思路：
+			// 1.当混入对象和组件有相同选项时，混入对象和组件的选项会以恰当的方式进行
+			// 合并。数据对象会在内部进行递归合并，当发生冲突时【组件数据优先】
+			// 例子中：message是混入对象和组件中都有的选项，合并时保留了组件的数据message:'goodbye'
+			// 2.当混入对象和组件有相同的钩子时，会合并成一个数组。混入对象和组件中的钩子都会执行，而且
+			// 混入对象的钩子在组件中钩子之前执行
+			// 3.值为对象的属性，如：directives、components、methods时，混入对象和组件中的同一属性会
+			// 合并成一个对象，当出现键冲突时，取组件对象中的键值对（同样是组件优先于混入对象）
+
+			/**
+			 * 
+			 * @ 全局混入 【使用恰当时可以为自定义选项注入处理逻辑】
+			 * 全局混入要慎用，因为它会影响后面创建的每一个vue实例
+			 * 使用恰当时，可以用来为自定义选项注入处理逻辑
+			 * 
+			 */
+			// 创建全局的混入对象
+			Vue.mixin({
+				// 为自定义选项注入处理逻辑
+				created: function() {
+					let myOption = this.$options.myOption;
+					if (myOption) {
+						console.log('控制台打印为自定义选项注入的处理逻辑：' + myOption);
+						// 控制台打印为自定义选项注入的处理逻辑：自定义选项
+					}
+				}
+			});
+			new Vue({
+				// 自定义选项
+				myOption: '自定义选项'
+			})
+		</script>
+	</body>
+</html>

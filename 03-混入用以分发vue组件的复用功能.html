@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>03-混入mixins用于分发组件的复用功能</title>
+	</head>
+	<body>
+		<div id="app"></div>
+		<script type="text/javascript" src="./js/vue.js"></script>
+		<script type="text/javascript">
+			/**
+			 * @ 混入 mixins
+			 * 参考源代码：vue.js官网：https://cn.vuejs.org/v2/guide/mixins.html
+			 * 混入提供了一种非常灵活的方式，来分发vue组件复用的功能
+			 * 
+			 * 1.一个混入对象可以包含任意组件选项；
+			 * 2.当组件使用混入对象时，所有混入对象的选项将被“混合”进入该组件本身的选项
+			 *  
+			 * 
+			 * 
+			 * 
+			 */
+			// 定义一个混入对象，它可以包含任意定义组件所有的选项
+			let myMixins = {
+				created: function() {
+					this.hello();
+				},
+				methods: {
+					hello: function() {
+						console.log('hello from mixin');
+					}
+				}
+			}
+			// 定义一个使用混入对象的组件
+			let Component = Vue.extend({
+				// 注意myMixins是一个对象，直接放在[]中就可以了，无需加引号，这和引入组件名称和属性名称不同
+				mixins: [myMixins],
+			});
+			// 实例化component
+			let component = new Component();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>06-Vue的component和Vue.extend定义组件的异同</title>
+	</head>
+	<body>
+		<div id="app">
+			<h1>{{ msg }}</h1>
+			<div id="son"></div>
+		</div>
+		<script type="text/javascript" src="./js/vue.js"></script>
+		<script>
+			/**
+			 *
+			 * @Vue.component和Vue.extend定义子组件的异同点
+			 * 参考文档：https://www.jianshu.com/p/2d2f42248dac
+			 *
+			 * 一、Vue.extend是根据Vue基础构造器，创建了一个子类。Vue.extend({})对象中可以包含组件的任何选项
+			 * 使用
+			 * 1.类实例化
+			 * 2.实例.$mount('#id')把这个创建好的组件放进dom结构中
+			 *
+			 * 二、Vue.component({})全局定义组件的方便之处，在于定义组件时，同时定义了一个组件名称comName,
+			 * 然后把这对标签<com-name></com-name>添加到需要的位置即可
+			 *
+			 */
+			// examp是一个子类
+			let Examp = Vue.extend({
+				data: function() {
+					return {
+						first: 'I',
+						second: 'Love ZhangShan'
+					};
+				},
+				template: `<div>
+				<h3>{{first}}{{second}}</h3>
+				</div>`,
+				created() {
+					console.log(this.first + '' + this.second);
+				}
+			});
+			let son = new Examp();
+			// $mount('#id')相当于Vue.component中定义的标签了
+			son.$mount('#son');
+			let vm = new Vue({
+				el: '#app',
+				data: {
+					msg: '这是Vue.extend定义的子组件，放到了div#son之中'
+				}
+			});
+		</script>
+	</body>
+</html>

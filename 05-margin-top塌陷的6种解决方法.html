@@ -4,20 +4,32 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>05-Vue调试工具测试</title>
+		<title>05-margin-top塌陷的6种解决方法</title>
 		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
 			.root {
 				background-color: orange;
 			}
+
+			.root .f_title {
+				margin-top: 30px;
+			}
+
+			/* 给一级标题盒子div.f_title添加一个上边距 */
 			.second {
 				background-color: purple;
 				/*margin-top塌陷解决的6种方法
 				a.给父元素添加边框，但会添加附加的边框
 				b.给父元素设置溢出隐藏
-				c.给父元素设置固定定位position：fixed;
+				c.给父元素设置绝对定位或者固定定位position：fixed;
 				d.给父元素设置浮动，不推荐，会出现未知错误
 				e.给父元素设置display:table;
-				f.使用伪元素方法,.clearfix::before{content:'';display:table;}
+				f.给父元素添加一个兄弟元素，使用伪元素的方式；.clearfix::before{content:'';display:table;}
+				g.给父元素加内边距padding值
 				*/
 				/* border: 1px solid #fff; */
 				/* overflow: hidden; */
@@ -28,10 +40,12 @@
 				/* display: table; */
 				/* 伪元素方法，给父元素增加一个clearfix类 */
 			}
+
 			.clearfix::before {
 				content: '';
 				display: table;
 			}
+
 			.third {
 				background-color: green;
 			}
@@ -39,18 +53,25 @@
 	</head>
 	<body>
 		<!-- 观察视图，分析margin-top塌陷问题 -->
-		<div id="app" class="root">
-			<div>{{root}}</div>
+		<div id="app" class="root clearfix">
+			<!-- 给f_title添加了一个30px的上边距，果然发生了塌陷。用伪元素的方法解决 -->
+			<!-- 给子盒子自己加伪元素是解决不了塌陷的，要给父元素添加伪元素的类clearfix。果然，解决了上边距塌陷问题 -->
+			<!-- <div class="f_title clearfix">{{root}}</div> -->
+			<div class="f_title">{{root}}</div>
 			<second-com></second-com>
 			<second-com></second-com>
 		</div>
 		<script type="text/javascript" src="./js/vue.js"></script>
 		<script type="text/javascript">
+			// 六种解决上边距塌陷的方法
+			// 参考文档：https://wcaicai.blog.csdn.net/article/details/118693898?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1.pc_relevant_default&utm_relevant_index=1
 			// Vue调试工具的安装和基本使用
 			// 二级组件的注册
 			Vue.component('second-com', {
-				data: function () {
-					return { msg: '这是二级组件' };
+				data: function() {
+					return {
+						msg: '这是二级组件'
+					};
 				},
 				template: `<div class="second clearfix">
           <h3>{{msg}}</h3>
@@ -61,14 +82,18 @@
 			});
 			// 三级组件的注册
 			Vue.component('third-com', {
-				data: function () {
-					return { msg: '这是三级组件' };
+				data: function() {
+					return {
+						msg: '这是三级组件'
+					};
 				},
 				template: '<div class="third">{{msg}}</div>'
 			});
 			const vm = new Vue({
 				el: '#app',
-				data: { root: '顶层组件' }
+				data: {
+					root: '顶层组件'
+				}
 			});
 		</script>
 	</body>
