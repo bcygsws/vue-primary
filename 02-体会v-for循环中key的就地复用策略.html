@@ -56,10 +56,10 @@
 				// 就地复用：vue不会通过操作dom来匹配元素的顺序，而是简单的复用这个元素，并确保在特定的索引下
 				// 显示已经被渲染的每个元素
 				template: `<ul class="list" @click="showId">
-				<li v-for="(item,index) in fru" :key="item.id">
+				<li v-for="(item,index) in fru" :key="item.id" :data-index="item.id">
 					<input name="Checkbox" type="checkbox">
 					{{item.id}}---{{item.name}}
-					<a href="javascript:;" :data-index="item.id" @click="delItem(index)">删除</a>
+					<a href="javascript:;" @click="delItem(index)">删除</a>
 					
 				</li>
 			</ul>`,
@@ -74,42 +74,46 @@
 
 					// }
 					// 用事件委托的方式处理showId()
-					showId() {},
+					showId(event) {
+						event = event || window.event;
+						console.log(event.target);
+
+					},
 					// 删除列表某一行
 					delItem(index) {
 						this.fru.splice(index, 1);
 					},
-					del(event) {
-						// event的兼容代码
-						event = event || window.event;
-						console.log(event);
-						// event.target监控冒泡到ul上的事件
-						console.log(event.target); // a 
-						console.log(event.target.dataset.index);
-						let ul = document.getElementsByClassName('list')[0];
-						if (event.target.nodeName.toLowerCase() === 'a') {
-							console.log(event.target.dataset.index); // 某个item.id
-							console.log(typeof event.target.dataset.index);
-							Array.from(ul.children).some((item, ind) => {
-								// 兼容处理，IE6/7/8中lastChild属性获取的就是最后一个子元素，IE9以上，火狐则使用默认的
-								// lastElementChild
-								let cur = parseInt(item.lastElementChild.getAttribute('data-index') || item
-									.lastChild.getAttribute('data-index'));
-								if (cur === parseInt(event.target.dataset
-										.index)) {
-									// 总结：
-									// 删除满足条件的当前li。vue中不提倡操作dom。fru数组发生变化，页面也就重新
-									// 刷新了，这是“双向绑定”的妙处
+					// 	del(event) {
+					// 		// event的兼容代码
+					// 		event = event || window.event;
+					// 		console.log(event);
+					// 		// event.target监控冒泡到ul上的事件
+					// 		console.log(event.target); // a 
+					// 		console.log(event.target.dataset.index);
+					// 		let ul = document.getElementsByClassName('list')[0];
+					// 		if (event.target.nodeName.toLowerCase() === 'a') {
+					// 			console.log(event.target.dataset.index); // 某个item.id
+					// 			console.log(typeof event.target.dataset.index);
+					// 			Array.from(ul.children).some((item, ind) => {
+					// 				// 兼容处理，IE6/7/8中lastChild属性获取的就是最后一个子元素，IE9以上，火狐则使用默认的
+					// 				// lastElementChild
+					// 				let cur = parseInt(item.lastElementChild.getAttribute('data-index') || item
+					// 					.lastChild.getAttribute('data-index'));
+					// 				if (cur === parseInt(event.target.dataset
+					// 						.index)) {
+					// 					// 总结：
+					// 					// 删除满足条件的当前li。vue中不提倡操作dom。fru数组发生变化，页面也就重新
+					// 					// 刷新了，这是“双向绑定”的妙处
 
-									// ul.removeChild(item);
-									// 从fru数组删除该条数据
-									this.fru.splice(ind, 1);
-									return true;
-								}
+					// 					// ul.removeChild(item);
+					// 					// 从fru数组删除该条数据
+					// 					this.fru.splice(ind, 1);
+					// 					return true;
+					// 				}
 
-							});
-						}
-					}
+					// 			});
+					// 		}
+					// 	}
 				}
 			});
 			// 父组件，渲染区域#app
