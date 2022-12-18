@@ -55,7 +55,7 @@
 				// v-for循环，循环标签需要声明key关键字，vue关键字有“就地复用”策略
 				// 就地复用：vue不会通过操作dom来匹配元素的顺序，而是简单的复用这个元素，并确保在特定的索引下
 				// 显示已经被渲染的每个元素
-				template: `<ul class="list" @click="showId">
+				template: `<ul class="list" @mouseover="showId" @mouseout="coverId">
 				<li v-for="(item,index) in fru" :key="item.id" :data-index="item.id">
 					<input name="Checkbox" type="checkbox">
 					{{item.id}}---{{item.name}}
@@ -74,10 +74,41 @@
 
 					// }
 					// 用事件委托的方式处理showId()
+					// mouseover 鼠标悬浮事件;不要用mouseenter,mouseenter不支持冒泡
+					// mouseout 鼠标移开事件;不要使用mouseleave,mouseleave同样不支持冒泡,在事件委托中,就是通过冒泡来实现
+					// 因此,使用mouseover/mouseout来替代mouseenter和mouseleave
+					// mouseenter无法冒泡
 					showId(event) {
 						event = event || window.event;
-						console.log(event.target);
+						console.log(event.target); // event.target引起触发事件的那个对象
+						console.log(event.currentTarget); // event.currentTarget事件执行时，停留的那个对象
+						console.log(event.target.dataset.index);
+						// 过滤掉ul
+						if (event.target.nodeName.toLowerCase() === 'li') {
+							this.colorAndDialog(event.target, event.target.dataset.index);
+						}
 
+					},
+					coverId(event) {
+						event = event || window.event;
+						console.log(event.target); // event.target引起触发事件的那个对象
+						console.log(event.currentTarget); // event.currentTarget事件执行时，停留的那个对象
+						console.log(event.target.dataset.index);
+						// 过滤掉ul
+						if (event.target.nodeName.toLowerCase() === 'li') {
+							this.colorAndDialogX(event.target, event.target.dataset.index);
+						}
+					
+					},
+					// 背景色变红，并且弹出对话框
+					colorAndDialog(obj, id) {
+						// alert("id为" + id);
+						obj.style.backgroundColor = "red";
+					},
+					// 背景色恢复白色
+					colorAndDialogX(obj, id) {
+						// alert("id为" + id);
+						obj.style.backgroundColor = "#FFF";
 					},
 					// 删除列表某一行
 					delItem(index) {
