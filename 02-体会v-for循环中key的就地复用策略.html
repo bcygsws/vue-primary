@@ -81,7 +81,6 @@
 					/**
 					 * 
 					 * @简化代码
-					 * 
 					 * 问题一：showId和coverId移动背景色改变的代码大多数一样，
 					 * 但是有个问题，诸如处理对象event,事件处理对象event只能成为该函数的唯一参数，才能拿到event.target这个对象
 					 * 因此，不能将showId和coverId函数抽象成两个参数的函数
@@ -89,8 +88,7 @@
 					 * 
 					 * 问题二：再次尝试简化代码，将两个方法合二为一；再使用if分支，区分colorAndDialog()方法的第三个参数值
 					 * 经验证：使用event.type来区分当前event.target处于 鼠标在元素之上 和 鼠标已经离开元素是可行的，随即完成了代码的
-					 * 简化
-					 * 
+					 * 简化；
 					 * 
 					 */
 					showIdAndChangedBgc(event) {
