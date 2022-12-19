@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>07-深度分析事件冒泡注意事项</title>
+		<style>
+			/* 情形一 */
+			/* #div1 {
+				width: 200px;
+				height: 100px;
+				background-color: #ccc;
+				border: 1px solid #000;
+
+			}
+
+			#div2 {
+				width: 100px;
+				height: 50px;
+				background-color: aqua;
+				border: 1px solid #ccc;
+			} */
+			/* 情形二:使用定位，将div2置于div1范围之外，会否继续冒泡传播呢？答案：会 */
+			#div1 {
+				width: 200px;
+				height: 100px;
+				background-color: #ccc;
+				border: 1px solid #000;
+				position: relative;
+				top: 60px;
+			}
+
+			#div2 {
+				width: 100px;
+				height: 50px;
+				background-color: aqua;
+				border: 1px solid #ccc;
+				position: relative;
+				top: -55px;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="div1">
+			<div id="div2">点我隐藏灰色点空白显示灰色</div>
+		</div>
+		<script>
+			const div1 = document.getElementById('div1');
+			const div2 = document.getElementById('div2');
+			// 封装的阻止冒泡的方法
+			function stopBubble(e) {
+				if (e && e.stopPropagation()) {
+					// 标准的W3C方式
+					e.stopPropagation();
+				} else {
+					window.event.cancelBubble = true;
+				}
+			}
+			// 点击div2隐藏div1
+			div2.onclick = function(e) {
+				alert("隐藏了");
+				// 隐藏div1
+				div1.style.display = "none";
+				// 调用阻止冒泡函数
+				stopBubble(e);
+			}
+			document.onclick = function() {
+				alert('显示了');
+				// 显示div1
+				div1.style.display = "block";
+			}
+			/**
+			 * 
+			 * @冒泡注意事项：
+			 * 一、事件流中同一时刻，事件只能处于捕获或冒泡之中一种状态
+			 * 二、项目中常用冒泡阶段（比如利用冒泡机制事件委托）
+			 * 三、onclick事件只有冒泡阶段
+			 * 四、onmouseleave和onmouseenter不支持冒泡，如果要实现类似功能的冒泡，使用另外一对事件onmouseover和onmouseout
+			 * 
+			 * @情形一
+			 * 在此样式上，点击div2,div2和document的两个事件确实执行了（onclick只有冒泡阶段）
+			 * 解释：div2冒泡，因此点击事件向外层传播，直到document，因此document的点击事件也会执行
+			 * 
+			 * @情形二
+			 * 更改CSS样式，将div2定位到div1的外面，再观察冒泡是否仍然与情形一 一样传播？
+			 * 答案是一样
+			 * 原因：
+			 * 重点识记：冒泡只会与html中的dom结构有关系，不会受到css样式的影响
+			 * 
+			 * 真实的场景是点击div2后，div1先隐藏了。然后，冒泡传播到document对象的点击事件时，又把div1显示出来了；只不过，这个隐藏-显示
+			 * 的过程，实在太快了，看不到变化
+			 * 
+			 * 那么稳妥，起见如何阻止事件冒泡呢？
+			 * 
+			 * 标准W3C:使用e.stopPropagation()，这里的e.stopPropagation()是一个标准的事件方法
+			 * 非标准的IE方式：window.event.cancelBubble="true" 这里e.cancelBubble是IE事件的一个属性，设为true即可
+			 * 
+			 * 通常情况下，会将其抽象为一个方法（作封装）
+			 * 
+			 * function stopBubble(e){
+			 * if(e&&e.stopPropagation()){
+			 *  // 标准W3C方式，阻止事件冒泡
+			 * e.stopPropagation();
+			 *   }else{
+			 *         // IE对象属性，阻止冒泡
+			 *         window.event.cancleBubble=true;
+			 *        }
+			 * }
+			 * 
+			 * 于是，可以在div2的onclick事件处理函数中，添加阻止冒泡的代码
+			 * 
+			 * 除了可以通过以上W3Ch和IE的方式阻止冒泡以外，还可以使用冒泡实现事件委托，提高内存占有率
+			 *  
+			 * 
+			 */
+		</script>
+	</body>
+</html>
