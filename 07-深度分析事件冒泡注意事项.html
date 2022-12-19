@@ -78,6 +78,9 @@
 			 * 三、onclick事件只有冒泡阶段
 			 * 四、onmouseleave和onmouseenter不支持冒泡，如果要实现类似功能的冒泡，使用另外一对事件onmouseover和onmouseout
 			 * 
+			 * 案例参考文档：
+			 * https://blog.csdn.net/weixin_42028153/article/details/119608440
+			 * 
 			 * @情形一
 			 * 在此样式上，点击div2,div2和document的两个事件确实执行了（onclick只有冒泡阶段）
 			 * 解释：div2冒泡，因此点击事件向外层传播，直到document，因此document的点击事件也会执行
