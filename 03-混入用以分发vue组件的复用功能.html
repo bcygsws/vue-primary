@@ -17,12 +17,19 @@
 			 * 
 			 * 1.一个混入对象可以包含任意组件选项；
 			 * 2.当组件使用混入对象时，所有混入对象的选项将被“混合”进入该组件本身的选项
-			 *  
 			 * 
+			 * 当混入对象和当前组件中都定义了生命周期钩子时，两者的生命周期钩子都会执行；且混入对象的的生命周期钩子
+			 * 在当前组件的生命周期钩子之前执行
 			 * 
 			 * 
 			 */
 			// 定义一个混入对象，它可以包含任意定义组件所有的选项
+			/*
+			执行结果：
+			 
+			hello from mixin
+			当前组件的created钩子
+			 */
 			let myMixins = {
 				created: function() {
 					this.hello();
@@ -37,6 +44,9 @@
 			let Component = Vue.extend({
 				// 注意myMixins是一个对象，直接放在[]中就可以了，无需加引号，这和引入组件名称和属性名称不同
 				mixins: [myMixins],
+				created: function() {
+					console.log('当前组件的created钩子');
+				}
 			});
 			// 实例化component
 			let component = new Component();
